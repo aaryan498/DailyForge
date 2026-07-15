@@ -218,12 +218,20 @@ export const forgotPasswordRequest = async (req, res) => {
       await user.save();
 
       // Send Email
-      // Configure Nodemailer transporter (ensure EMAIL_USER and EMAIL_PASS are in your .env)
+      // Configure Nodemailer transporter (ensure EMAIL_FROM and EMAIL_PASS are in your .env)
+      const emailUser = process.env.EMAIL_FROM;
+      const emailPass = process.env.EMAIL_PASS;
+
+      if (!emailUser || !emailPass) {
+        console.error("Nodemailer configuration error: EMAIL_FROM or EMAIL_PASS environment variables are not set. Please check your .env file.");
+        throw new Error("Email service not configured. Please set EMAIL_FROM and EMAIL_PASS in your .env file.");
+      }
+
       const transporter = nodemailer.createTransport({
         service: process.env.EMAIL_SERVICE || 'Gmail', // e.g., 'Gmail', 'SendGrid', etc.
         auth: {
-          user: process.env.EMAIL_FROM, // Your email address
-          pass: process.env.EMAIL_PASS, // Your app-specific password
+          user: emailUser,
+          pass: emailPass,
         },
       });
 
@@ -243,7 +251,6 @@ export const forgotPasswordRequest = async (req, res) => {
         `,
       };
       await transporter.sendMail(mailOptions);
-      console.log(`Mail sent to ${user.email}`)
     }
 
     // Generic Response (always send this, regardless of whether user was found)
