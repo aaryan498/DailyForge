@@ -196,47 +196,43 @@ export const login = async (req, res) => {
 export const forgotPasswordRequest = async (req, res) => {
   const { email } = req.body;
 
-  // 1. Validate Input: Basic email format validation
+  // Validate Input: Basic email format validation
   if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
     // Always send a generic success message to prevent user enumeration
     return res.status(200).json({ message: 'If an account with that email exists, a password reset link has been sent to your inbox.' });
   }
 
   try {
-    // 2. User Lookup
     const user = await User.findOne({ email });
 
-    // 3. Generate Token & Store Hashed Token (if user exists)
+    // Generate Token & Store Hashed Token (if user exists)
     if (user) {
-      // Generate a random, cryptographically secure token
-      const resetToken = crypto.randomBytes(32).toString('hex');
 
-      // Hash the token before saving to database
-      // Using bcrypt for hashing consistency with user passwords
+      const resetToken = crypto.randomBytes(32).toString('hex');
       const hashedToken = await bcrypt.hash(resetToken, 10);
 
       // Set token and expiration on user document
       user.resetPasswordToken = hashedToken;
       user.resetPasswordExpires = Date.now() + 3600000; // 1 hour from now (in milliseconds)
+      user.resetPasswordUsed = false; // Reset flag
       await user.save();
 
-      // 4. Send Email
+      // Send Email
       // Configure Nodemailer transporter (ensure EMAIL_USER and EMAIL_PASS are in your .env)
       const transporter = nodemailer.createTransport({
         service: process.env.EMAIL_SERVICE || 'Gmail', // e.g., 'Gmail', 'SendGrid', etc.
         auth: {
-          user: process.env.EMAIL_USER, // Your email address
-          pass: process.env.EMAIL_PASS, // Your email password or app-specific password
+          user: process.env.EMAIL_FROM, // Your email address
+          pass: process.env.EMAIL_PASS, // Your app-specific password
         },
       });
 
       // Construct the reset URL for the frontend
-      // Ensure process.env.FRONTEND_URL is set in your .env file (e.g., http://localhost:5173)
       const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
 
       const mailOptions = {
         to: user.email,
-        from: process.env.EMAIL_USER, // Sender email
+        from: process.env.EMAIL_FROM, // Sender email
         subject: 'DailyForge Password Reset Request',
         html: `
           <p>You are receiving this because you (or someone else) have requested the reset of the password for your account.</p>
@@ -250,7 +246,7 @@ export const forgotPasswordRequest = async (req, res) => {
       console.log(`Mail sent to ${user.email}`)
     }
 
-    // 5. Generic Response (always send this, regardless of whether user was found)
+    // Generic Response (always send this, regardless of whether user was found)
     res.status(200).json({ message: 'If an account with that email exists, a password reset link has been sent to your inbox.' });
 
   } catch (error) {
@@ -264,7 +260,7 @@ export const forgotPasswordRequest = async (req, res) => {
 export const resetPassword = async (req, res) => {
   const { token, newPassword, confirmNewPassword } = req.body;
 
-  // 1. Validate Input
+  // Validate Input
   if (!token || !newPassword || !confirmNewPassword) {
     return res.status(400).json({ message: "All fields are required." });
   }
@@ -282,7 +278,6 @@ export const resetPassword = async (req, res) => {
   }
 
   try {
-    // Find user by matching the provided token with the hashed token in the database
     const users = await User.find({
       resetPasswordExpires: { $gt: Date.now() },
       resetPasswordUsed: false,
