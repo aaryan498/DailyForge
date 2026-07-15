@@ -11,8 +11,8 @@ import {
   updateProfile,
   logout,
   googleLogin, 
-  resetPassword, // Imported the new controller function
-  forgotPasswordRequest, // Imported the new controller function
+  resetPassword,
+  forgotPasswordRequest,
   uploadProfileImage,
   uploadMiddleware
 } from '../controllers/authController.js';

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { X } from "lucide-react"; // Eye/EyeOff are no longer needed for email input
-import FormError from "./common/FormError"; // Assuming common/FormError exists
+import { X } from "lucide-react";
+import FormError from "./common/FormError";
 
 const ChangePasswordModal = ({ onClose, onSubmit, errorMessage, onError }) => {
   const [email, setEmail] = useState("");
@@ -10,7 +10,6 @@ const ChangePasswordModal = ({ onClose, onSubmit, errorMessage, onError }) => {
   const [successMessage, setSuccessMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Body scroll lock and escape key handling, similar to TaskFormModal
   useEffect(() => {
     const scrollY = window.scrollY;
     document.body.style.position = "fixed";
@@ -61,7 +60,7 @@ const ChangePasswordModal = ({ onClose, onSubmit, errorMessage, onError }) => {
     try {
       await onSubmit({ email }); // Call onSubmit from Login.jsx to handle API call
       setSuccessMessage("If an account with that email exists, a password reset link has been sent to your inbox.");
-      setMode('emailSent'); // Transition to success message view
+      setMode('emailSent');
     } catch (err) {
       onError(err.message || "Failed to send password reset link.");
     } finally {
