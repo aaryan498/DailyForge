@@ -84,14 +84,14 @@ export const signup = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    if (!name || name.trim().length < 2) {
+    if (!name || typeof name !== "string" || name.trim().length < 2) {
       return res
         .status(400)
         .json({ message: "Name must be at least 2 characters long" });
     }
 
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
-    if (!password || !passwordRegex.test(password)) {
+    if (!password || typeof password !== "string" || !passwordRegex.test(password)) {
       return res.status(400).json({
         message:
           "Password must be at least 8 characters long, include an uppercase letter, a digit, and a special character",
