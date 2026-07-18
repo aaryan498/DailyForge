@@ -1,6 +1,8 @@
-import express from "express";
 import dotenv from "dotenv";
 import path from "path";
+dotenv.config({ path: path.resolve(import.meta.dirname, "../.env") });
+
+import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import connectDB from "../config/db.js";
