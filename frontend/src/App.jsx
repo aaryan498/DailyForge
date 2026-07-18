@@ -38,11 +38,7 @@ const AnimatedRoutes = () => {
         <Route
           path="/"
           element={
-            <PublicRoute>
-              <AuthLayout>
-                <Login />
-              </AuthLayout>
-            </PublicRoute>
+            <LandingPage />
           }
         />
         <Route
@@ -181,11 +177,7 @@ const App = () => {
           <Route
             path="/"
             element={
-              <PublicRoute>
-                <AuthLayout>
-                  <Login />
-                </AuthLayout>
-              </PublicRoute>
+              <LandingPage />
             }
           />
           <Route
