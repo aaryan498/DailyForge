@@ -243,7 +243,6 @@ export default function Profile() {
   const [name, setName] = useState(user?.name || '');
   const [primaryColor, setPrimaryColor] = useState(user?.primaryColor || '#4eb7b3');
   const [showProfilePictureModal, setShowProfilePictureModal] = useState(false); // State for profile picture modal
-  const [profileImage, setProfileImage] = useState("");
 
   // password states
   const [passwordError, setPasswordError] = useState("");
