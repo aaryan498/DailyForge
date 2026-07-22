@@ -2,6 +2,7 @@ import React, { useState, useRef, useCallback, useEffect } from "react";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import Navbar from "./components/Navbar.jsx";
+import KeyboardShortcutsProvider from "./components/KeyboardShortcutsProvider.jsx";
 import LandingPage from "./pages/LandingPage";
 import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
@@ -186,6 +187,7 @@ const App = () => {
   }, []);
 
   return (
+    <KeyboardShortcutsProvider>
     <BrowserRouter>
       <Navbar />
       {/* Pass showToast to components that need it */}
@@ -299,6 +301,7 @@ const App = () => {
       <CustomToast message={toast.message} type={toast.type} />
       <ScrollToTop />
     </BrowserRouter>
+    </KeyboardShortcutsProvider>
   );
 };
 
