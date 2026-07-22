@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback, useContext } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import { Eye, EyeOff, Upload } from "lucide-react";
 import axios from "../api/axios";
 import ProfilePictureUploadModal from "../components/ProfilePictureUploadModal"; // Import the new modal
